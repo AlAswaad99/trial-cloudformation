@@ -8,18 +8,37 @@ const axios = require('axios');
 
 const { createServer } = require("http");
 const { Server } = require("socket.io");
+const fs = require('fs');
 
 const app = express();
+const options = {
+    key: fs.readFileSync('server.key'),
+    cert: fs.readFileSync('server.cert')
+};
 
 var count = 0;
 
-app.post('/', async (req, res) => {
-    console.log('am right here')
-    count += 1;
-    res.status(200).send(`count is: ${count}`);
-    await redisClient.set("count", count.toString());
-    await sendCachedDataToClients("count")
-    return;
+// Define a simple route
+app.get('/hey', (req, res) => {
+    res.send('Hello, World!');
+});
+
+app.get('/gateway/socket.io', (req, res) => {
+
+	res.send("through gateway")
+});
+
+
+
+app.post('/refresh', express.json(), async (req, res) => {
+    
+//    count += 1;
+    const { id } = req.body;
+  	console.log('am right here with id', id)
+    res.status(200).send(`success refreshing cache`);
+//    await redisClient.get("count", count.toString());
+    await sendCachedDataToClients(id)
+    
 });
 
 
@@ -37,7 +56,7 @@ const io = new Server(httpServer, {
 const redisClient = redis.createClient({
     socket: {
         host: 'localhost',
-        port: 6379,
+        port: 63791,
     }
     // url: "redis://projectgreenplayleaderboardcache-z22fwr.serverless.use1.cache.amazonaws.com:6379"
 });
@@ -45,7 +64,15 @@ const redisClient = redis.createClient({
 
 redisClient.on('error', err => console.log('Redis Client Error', err));
 
-
+// Handle Socket.IO connections on the /leaderboard route
+io.of('/gateway/socket.io').on('connection', (socket) => {
+    console.log('A user connected to the leaderboard through gateway');
+    
+    // Handle socket events as needed
+    socket.on('disconnect', () => {
+        console.log('A user disconnected from the leaderboard through gateway!');
+    });
+});
 
 io.on("connection", (socket) => {
     // console.log(socket.id);

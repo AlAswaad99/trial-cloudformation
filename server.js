@@ -11,10 +11,10 @@ const { Server } = require("socket.io");
 const fs = require('fs');
 
 const app = express();
-const options = {
-    key: fs.readFileSync('server.key'),
-    cert: fs.readFileSync('server.cert')
-};
+// const options = {
+//     key: fs.readFileSync('server.key'),
+//     cert: fs.readFileSync('server.cert')
+// };
 
 var count = 0;
 

@@ -6,7 +6,7 @@ sudo sed -i "s/bind 127.0.0.1 ::1/bind 0.0.0.0/" /etc/redis/redis.conf
 sudo sed -i "s/port 6379/port 63791/" /etc/redis/redis.conf 
 sudo cat /etc/redis/redis.conf | grep -E "^bind|^protected-mode|^port"
 redis-cli info server
-sudo systemctl start redis-server
+sudo systemctl restart redis-server
 sudo systemctl enable redis-server
 redis-cli ping
 echo "Redis installation and configuration completed."

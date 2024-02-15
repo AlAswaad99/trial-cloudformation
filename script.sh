@@ -10,14 +10,14 @@ sudo systemctl start redis-server
 sudo systemctl enable redis-server
 redis-cli ping
 echo "Redis installation and configuration completed."
-cd ~
-curl -sL https://deb.nodesource.com/setup_lts.x -o nodesource_setup.sh          
-sudo bash nodesource_setup.sh
-sudo apt install -y nodejs git
+# cd ~
+# curl -sL https://deb.nodesource.com/setup_lts.x -o nodesource_setup.sh          
+# sudo bash nodesource_setup.sh
+# sudo apt install -y nodejs git
 
 sudo npm install -g pm2
-cd /home/ubuntu
-mkdir app && cd app
-git clone https://github.com/AlAswaad99/trial-cloudformation.git .
+cd /home/ubuntu/app
+# mkdir app && cd app
+# git clone https://github.com/AlAswaad99/trial-cloudformation.git .
 npm install
 pm2 start server.js
